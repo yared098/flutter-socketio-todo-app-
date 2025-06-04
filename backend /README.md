@@ -19,9 +19,24 @@ A real-time Todo application built using Flutter for the frontend and Node.js + 
 ### Backend (Socket.IO Server)
 
 1. Clone the repo and navigate to the backend folder (if split) or root.
-2. Install dependencies:
-   ```bash
-   npm install
+Backend Server Setup
 
-3 run the code 
-   npm run dev
+The backend is built with Node.js and Socket.IO.
+
+Steps:
+   1. cd backend
+
+   2. npm install
+
+   3. npm run dev 
+
+
+
+📬 Contact
+GitHub: yared098
+
+phone : +251988107722
+
+Email: fdessalew@gmail.com
+ 
+website :https://desst-46d7c-5e781.web.app/
