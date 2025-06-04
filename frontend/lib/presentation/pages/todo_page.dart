@@ -19,10 +19,12 @@ class TodoPage extends StatefulWidget {
 
 class _TodoPageState extends State<TodoPage> {
   bool showForm = false;
+
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _searchController = TextEditingController();
   final _descriptionController = TextEditingController();
+
   String? editingId;
   String _searchQuery = '';
   int _counttodos = 0;
@@ -53,22 +55,30 @@ class _TodoPageState extends State<TodoPage> {
     loadCount(repo);
 
     _addedSub = repo.onTodoAdded.listen((todo) {
-      _showInfo("${todo.title} was added by someone else");
-      context.read<TodoBloc>().add(LoadTodos());
-      loadCount(repo);
-    });
+  _showInfo(todo.title, todo.description, "added");
+  context.read<TodoBloc>().add(LoadTodos());
+  loadCount(repo);
+});
 
-    _updatedSub = repo.onTodoUpdated.listen((todo) {
-      _showInfo("${todo.title} was updated by someone else");
-      context.read<TodoBloc>().add(LoadTodos());
-      loadCount(repo);
-    });
+_updatedSub = repo.onTodoUpdated.listen((todo) {
+  _showInfo(todo.title, todo.description, "updated");
+  context.read<TodoBloc>().add(LoadTodos());
+  loadCount(repo);
+});
 
-    _deletedSub = repo.onTodoDeleted.listen((id) {
-      _showInfo("A todo was deleted by someone else");
-      context.read<TodoBloc>().add(LoadTodos());
-      loadCount(repo);
-    });
+_deletedSub = repo.onTodoDeleted.listen((id) async {
+  print( "Todo deleted with id: $id");
+  final deletedTodo = await repo.getTodoById(id);
+  if (deletedTodo != null) {
+    _showInfo(deletedTodo.title, deletedTodo.description, "deleted");
+  } else {
+    _showInfo("Todo is", null, "deleted");
+  }
+  context.read<TodoBloc>().add(LoadTodos());
+  loadCount(repo);
+});
+
+
 
     context.read<TodoBloc>().add(LoadTodos());
   }
@@ -80,7 +90,7 @@ class _TodoPageState extends State<TodoPage> {
     });
   }
 
-  void _showInfo(String message) {
+void _showInfo(String title, String? description, String action) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       behavior: SnackBarBehavior.floating,
@@ -95,9 +105,27 @@ class _TodoPageState extends State<TodoPage> {
           const Icon(Icons.info_outline, color: Colors.white70),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(color: Colors.white, fontSize: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Todo $action: $title',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                if (description != null && description.isNotEmpty)
+                  Text(
+                    description,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 13,
+                    ),
+                  ),
+              ],
             ),
           ),
         ],
@@ -105,6 +133,7 @@ class _TodoPageState extends State<TodoPage> {
     ),
   );
 }
+
 
 
   void _toggleForm([Todo? todo]) {
@@ -190,25 +219,25 @@ class _TodoPageState extends State<TodoPage> {
       appBar: AppBar(
         title: const Text('Todo List'),
         actions: [
+          _datasource=="Socket"?Text(
+            'Backend connected: $_datasource',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.green),
+          ):Text("Backend not connected",
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.red),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  _datasource,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                
                 const SizedBox(width: 16),
 
                 if (_datasource == "Socket") ...[
                   // User count inside a CircleAvatar
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: Colors.black,
                     child: Text(
                       '$_counttodos',
                       style: const TextStyle(
@@ -220,16 +249,8 @@ class _TodoPageState extends State<TodoPage> {
                   ),
                   const SizedBox(width: 16),
 
-                  // Online status icon inside CircleAvatar
-                  const CircleAvatar(
-                    radius: 16,
-                    backgroundColor: Colors.green,
-                    child: Icon(
-                      Icons.online_prediction,
-                      size: 20,
-                      color: Colors.white,
-                    ),
-                  ),
+               
+                  
                 ],
               ],
             ),

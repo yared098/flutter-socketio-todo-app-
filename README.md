@@ -2,7 +2,7 @@
 
 ### ✅ Todo Added with Broadcast Notification  
 Shows a broadcast notification when a new todo is added.  
-![Todo Added](Screenshots/image.png)
+![Todo Added](Screenshots/image0.png)
 
 ### 🔁 Filter Todos  
 Demonstrates filtering the todo list based on criteria.  
@@ -10,11 +10,11 @@ Demonstrates filtering the todo list based on criteria.
 
 ### ➕ Add New Todo  
 Interface for adding a new todo item using the socket source.  
-![Add New Todo](Screenshots/image3.png)
+![Add New Todo](Screenshots/image2.png)
 
 ### ✏️ Update Todo  
 Shows updating an existing todo and broadcasting the changes.  
-![Update Todo](Screenshots/image4.png)
+![Update Todo](Screenshots/image3.png)
 
 ---
 
@@ -63,13 +63,15 @@ npm install
 npm run dev
 ```
 
-Make sure to update the port in `lib/data/datasources/socket_todo_datasource.dart` if necessary:
+Make sure to update the port and the socketurl in `lib/config/config.dart` if necessary:
 
-```dart
-_socket = IO.io('http://127.0.0.1:PORT', <String, dynamic>{
-  'transports': ['websocket'],
-  'autoConnect': false,
-});
+``` dart 
+class AppConfig {
+  static const String socketHost = '127.0.0.1';  // if not work , try 'localhost'
+  static const int socketPort = 3000;  // change to your socket server port
+  static String get socketUrl => 'http://$socketHost:$socketPort';
+}
+
 ```
 
 Replace `PORT` with the actual port number your backend is running on.

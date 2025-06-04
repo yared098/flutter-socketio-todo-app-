@@ -20,6 +20,7 @@ class TodoRepositoryImpl implements TodoRepository {
   Stream<String> get onTodoDeleted => socketDataSource.onTodoDeleted;
 
   bool get _socketActive => socketDataSource.isConnected;
+  
 
   @override
   Future<void> addTodo(Todo todo) async {
@@ -64,6 +65,28 @@ class TodoRepositoryImpl implements TodoRepository {
       return await localDataSource.getTodos().then((todos) => todos.length);
     }
   }
+
+ 
+@override
+Future<Todo?> getTodoById(String id) async {
+  try {
+    if (_socketActive) {
+      final todos = await socketDataSource.getTodos();
+      return todos.firstWhere((todo) => todo.id == id);
+    } else {
+      final todos = await localDataSource.getTodos();
+      return todos.firstWhere((todo) => todo.id == id);
+    }
+  } catch (e) {
+    // If no element is found, firstWhere throws StateError
+    if (e is StateError) {
+      return null;
+    }
+    rethrow; // rethrow if some other error occurred
+  }
+}
+
+
 
   
 }

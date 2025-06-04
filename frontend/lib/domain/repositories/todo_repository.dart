@@ -6,5 +6,7 @@ abstract class TodoRepository {
   Future<void> updateTodo(Todo todo);
   Future<void> deleteTodo(String id);
    // existing methods...
+   Future<Todo?> getTodoById(String id);
+
   
 }

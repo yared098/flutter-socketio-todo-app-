@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:evergreen/config/config.dart';
 import 'package:evergreen/data/models/todo_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -30,12 +31,12 @@ class TodoSocketDataSourceImpl implements TodoSocketDataSource {
   bool _connected = false;
   bool get isConnected => _connected;
 
-  // Completer to handle getTodos async response
+  
   Completer<List<Todo>>? _getTodosCompleter;
 
   @override
   void connect() {
-    _socket = IO.io('http://127.0.0.0:3002', <String, dynamic>{
+    _socket = IO.io(AppConfig.socketUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });
@@ -44,12 +45,12 @@ class TodoSocketDataSourceImpl implements TodoSocketDataSource {
 
     _socket.on('connect', (_) {
       _connected = true;
-      print('Socket connected');
+      
     });
 
     _socket.on('disconnect', (_) {
       _connected = false;
-      print('Socket disconnected');
+     
     });
 
     _socket.on('todoAdded', (data) {
