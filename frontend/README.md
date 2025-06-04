@@ -1,9 +1,36 @@
-File stracture
+# ✅ Flutter Socket.io Todo App
+
+A simple mobile application demonstrating **CRUD (Create, Read, Update, Delete)** operations using Flutter. The app uses **BLoC** for state management and follows **Clean Architecture** principles for scalable, maintainable code.
+
+---
+
+## ✨ Features
+
+- ✅ **Create**: Add new items to the list.
+
+- 📖 **Read**: View all items.
+
+- 📝 **Update**: Edit existing items.
+
+- ❌ **Delete**: Remove items from the list.
+
+- ⚙️ **State Management**: Built using the BLoC (Business Logic Component) pattern.
+- 🧱 **Clean Architecture**: Separation of data, domain, and presentation layers.
+
+- 🌐 **- Real-time Socket Support**:
+  - Live broadcast of add/update/delete events to all connected users.
+  - Real-time counter of active users (via Socket.io).
+
+---
+## 🧩 Project Structure
+
 
 lib/
 ├── data/
 │   ├── datasources/
 │   │   └── local_todo_datasource.dart
+|   |   └── socket_todo_datasource.dart
+|   |    
 │   ├── models/
 │   │   └── todo_model.dart
 │   └── repositories/
@@ -26,65 +53,56 @@ lib/
 │   │   ├── todo_event.dart
 │   │   └── todo_state.dart
 │   └── pages/
-│       └── todo_page.dart
+│   |   └── todo_page.dart
+|   └── widgets/
+│       └── search_form.dart
+|       └── todo_form_widget.dart
 │
 └── main.dart
 
 
-# Flutter Todo App (Clean Architecture + Socket.IO)
-
-A robust and scalable **Flutter Todo CRUD application** built with **Clean Architecture** and **Bloc state management**. The app supports two data sources: **real-time updates via Socket.IO** and **local state management**. If the Socket.IO server is online, all operations are synchronized across clients in real time. If it's offline, operations fall back to the local state.
-
----
-
-## ✨ Features
-
--  Clean Architecture for better scalability and testability
--  State management using `flutter_bloc`
--  Real-time communication with Socket.IO
--  Offline support via local state fallback
--  Add, update, delete, and search todos
--  Integrated search bar
--  Responsive UI with modern UX
-
----
-
-##  Architecture Overview
-
-The project follows the Clean Architecture principles, dividing the codebase into:
-
-- `data/`: Models and data sources Socket or local-based CRUD implementations
-- `domain/`: Entities and use cases (if added later)
-- `presentation/`: UI widgets, pages, and Bloc
-
-
----
-
-## 🔌 Socket.IO Integration
-
-- When the backend (Socket.IO server) is running, the app connects to it.
-- All create, update, and delete operations are broadcast to all connected clients.
-- Notifications are shown via SnackBars to confirm real-time changes.
-
-### Fallback Mode (Local State)
-
-- If the backend is not running or disconnected, the app automatically uses local Bloc state for CRUD operations.
-- This ensures a smooth and functional offline experience.
-
----
-
 ## 🚀 Getting Started
 
-### Prerequisites
+### ✅ Prerequisites
 
-- Flutter 3.x installed
-- Node.js and Socket.IO for the backend (optional)
+- Flutter SDK (>= 3.x)
+- Android Studio or VS Code with Flutter plugin
+- A connected Android device or emulator
+
+---
+
+## 🛠 Installation
 
 ### 1. Clone the Repository
 
-```bash
-
 git clone https://github.com/yared098/flutter-socketio-todo-app-.git
-cd cd frontend 
+cd frontend
+
+###2. Install Dependencies
+    flutter pub get
+
+###3 Run the App
+   flutter run
 
 
+Backend Server Setup
+
+The backend is built with Node.js and Socket.IO.
+
+Steps:
+   1. cd backend
+
+   2. npm install
+
+   3. npm run dev 
+
+
+
+📬 Contact
+GitHub: yared098
+
+phone : +251988107722
+
+Email: fdessalew@gmail.com
+ 
+website :https://desst-46d7c-5e781.web.app/
