@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:arifpay/data/models/todo_model.dart';
+import 'package:evergreen/data/models/todo_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 
@@ -11,8 +11,8 @@ abstract class TodoSocketDataSource {
   void deleteTodo(String id);
   
 
-  Future<List<Todo>> getTodos(); // <-- Added here
-   bool get isConnected; // <-- Add this line
+  Future<List<Todo>> getTodos(); 
+   bool get isConnected; 
 
   Stream<Todo> get onTodoAdded;
   Stream<Todo> get onTodoUpdated;

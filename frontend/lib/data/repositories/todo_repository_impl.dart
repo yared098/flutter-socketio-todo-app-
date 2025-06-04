@@ -1,8 +1,8 @@
 
-import 'package:arifpay/data/datasources/local_todo_datasource.dart';
-import 'package:arifpay/data/datasources/todo_socket_datasource.dart';
-import 'package:arifpay/data/models/todo_model.dart';
-import 'package:arifpay/domain/repositories/todo_repository.dart';
+import 'package:evergreen/data/datasources/local_todo_datasource.dart';
+import 'package:evergreen/data/datasources/todo_socket_datasource.dart';
+import 'package:evergreen/data/models/todo_model.dart';
+import 'package:evergreen/domain/repositories/todo_repository.dart';
 
 class TodoRepositoryImpl implements TodoRepository {
   final LocalTodoDataSource localDataSource;

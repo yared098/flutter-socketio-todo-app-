@@ -1,9 +1,9 @@
-import 'package:arifpay/domain/usecases/add_todo.dart' show AddTodo;
-import 'package:arifpay/domain/usecases/delete_todo.dart';
-import 'package:arifpay/domain/usecases/get_todos.dart';
-import 'package:arifpay/domain/usecases/update_todo.dart';
-import 'package:arifpay/presentation/bloc/todo_event.dart';
-import 'package:arifpay/presentation/bloc/todo_state.dart';
+import 'package:evergreen/domain/usecases/add_todo.dart' show AddTodo;
+import 'package:evergreen/domain/usecases/delete_todo.dart';
+import 'package:evergreen/domain/usecases/get_todos.dart';
+import 'package:evergreen/domain/usecases/update_todo.dart';
+import 'package:evergreen/presentation/bloc/todo_event.dart';
+import 'package:evergreen/presentation/bloc/todo_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {

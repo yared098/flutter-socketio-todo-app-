@@ -1,4 +1,4 @@
-import 'package:arifpay/data/models/todo_model.dart';
+import 'package:evergreen/data/models/todo_model.dart';
 
 class TodoModel extends Todo {
   TodoModel({required super.id, required super.title, required super.isCompleted});

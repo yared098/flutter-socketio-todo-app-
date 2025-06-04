@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.arifpay"
+    namespace = "com.example.evergreen"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
