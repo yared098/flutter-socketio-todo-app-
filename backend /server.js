@@ -11,27 +11,28 @@ const io = new Server(server, {
   }
 });
 
-let todos = []; // In-memory todo list
+let todos = []; 
 
 io.on('connection', (socket) => {
   console.log('✅ User connected:', socket.id);
 
-  // Optional: you could remove this to avoid confusion with 'todosList'
-  // socket.emit('initialTodos', todos);
+ 
 
-  // ✅ Handle client explicitly requesting the todos list
+  // get todos
   socket.on('getTodos', () => {
     console.log('📥 getTodos requested by:', socket.id);
     socket.emit('todosList', todos); // ✅ Matches what Flutter expects
+    socket.emit('todosCount', todos.length);
   });
 
   // ✅ Add todo
   socket.on('addTodo', (todo) => {
     todos.push(todo);
-    console.log('➕ Todo added:', todo);
+    console.log(' Todo added:', todo);
 
-    io.emit('todoAdded', todo);       // Broadcast new todo
-    io.emit('todosList', todos);      // Update all clients with latest list
+    io.emit('todoAdded', todo);      
+    io.emit('todosList', todos);    
+    io.emit('todosCount', todos.length); 
   });
 
   // ✅ Update todo
@@ -42,6 +43,7 @@ io.on('connection', (socket) => {
     console.log('✏️ Todo updated:', updatedTodo);
 
     io.emit('todoUpdated', updatedTodo);
+    io.emit('todosCount', todos.length); 
   });
 
   // ✅ Delete todo
@@ -50,14 +52,15 @@ io.on('connection', (socket) => {
     console.log('❌ Todo deleted:', id);
 
     io.emit('todoDeleted', id);
+    io.emit('todosCount', todos.length);
   });
 
   socket.on('disconnect', () => {
-    console.log('🚪 User disconnected:', socket.id);
+    console.log(' User disconnected:', socket.id);
   });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3003;
 server.listen(PORT, () => {
-  console.log(`🚀 Socket.IO server running on port ${PORT}`);
+  console.log(` Socket.IO server running on port ${PORT}`);
 });

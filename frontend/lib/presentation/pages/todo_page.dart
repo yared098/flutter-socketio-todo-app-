@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:arifpay/data/models/todo_model.dart';
+import 'package:arifpay/data/repositories/todo_repository_impl.dart';
 import 'package:arifpay/presentation/bloc/todo_bloc.dart';
 import 'package:arifpay/presentation/bloc/todo_event.dart';
 import 'package:arifpay/presentation/bloc/todo_state.dart';
@@ -22,6 +25,12 @@ class _TodoPageState extends State<TodoPage> {
   final _descriptionController = TextEditingController();
   String? editingId;
   String _searchQuery = '';
+  int _counttodos = 0;
+  String _datasource = "";
+
+  late final StreamSubscription<Todo> _addedSub;
+  late final StreamSubscription<Todo> _updatedSub;
+  late final StreamSubscription<String> _deletedSub;
 
   @override
   void initState() {
@@ -32,7 +41,71 @@ class _TodoPageState extends State<TodoPage> {
       });
     });
     // for socket initi
+    final repo = context.read<TodoRepositoryImpl>();
+    final isSocket = repo.socketDataSource.isConnected;
+
+    if (isSocket) {
+      _datasource = "Socket";
+    } else {
+      _datasource = "Local";
+    }
+
+    loadCount(repo);
+
+    _addedSub = repo.onTodoAdded.listen((todo) {
+      _showInfo("${todo.title} was added by someone else");
+      context.read<TodoBloc>().add(LoadTodos());
+      loadCount(repo);
+    });
+
+    _updatedSub = repo.onTodoUpdated.listen((todo) {
+      _showInfo("${todo.title} was updated by someone else");
+      context.read<TodoBloc>().add(LoadTodos());
+      loadCount(repo);
+    });
+
+    _deletedSub = repo.onTodoDeleted.listen((id) {
+      _showInfo("A todo was deleted by someone else");
+      context.read<TodoBloc>().add(LoadTodos());
+      loadCount(repo);
+    });
+
+    context.read<TodoBloc>().add(LoadTodos());
   }
+
+  Future<void> loadCount(repo) async {
+    int count = await repo.getCount();
+    setState(() {
+      _counttodos = count;
+    });
+  }
+
+  void _showInfo(String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.blueGrey[900],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      margin: const EdgeInsets.all(16),
+      duration: const Duration(seconds: 3),
+      content: Row(
+        children: [
+          const Icon(Icons.info_outline, color: Colors.white70),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              message,
+              style: const TextStyle(color: Colors.white, fontSize: 15),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 
   void _toggleForm([Todo? todo]) {
     if (todo != null) {
@@ -101,9 +174,69 @@ class _TodoPageState extends State<TodoPage> {
   }
 
   @override
+  void dispose() {
+    _addedSub.cancel();
+    _updatedSub.cancel();
+    _deletedSub.cancel();
+    _searchController.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Todo List')),
+      appBar: AppBar(
+        title: const Text('Todo List'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _datasource,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 16),
+
+                if (_datasource == "Socket") ...[
+                  // User count inside a CircleAvatar
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Colors.blueAccent,
+                    child: Text(
+                      '$_counttodos',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+
+                  // Online status icon inside CircleAvatar
+                  const CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Colors.green,
+                    child: Icon(
+                      Icons.online_prediction,
+                      size: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+
       body: Row(
         children: [
           Expanded(
@@ -226,7 +359,6 @@ class _TodoPageState extends State<TodoPage> {
               ],
             ),
           ),
-
         ],
       ),
 

@@ -13,19 +13,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-final localDataSource = LocalTodoDataSource();
-final socketDataSource = TodoSocketDataSourceImpl();
-final repository = TodoRepositoryImpl(localDataSource: localDataSource, socketDataSource: socketDataSource);
- 
+  final localDataSource = LocalTodoDataSource();
+  final socketDataSource = TodoSocketDataSourceImpl();
+  final repository = TodoRepositoryImpl(
+    localDataSource: localDataSource,
+    socketDataSource: socketDataSource,
+  );
 
-  runApp(MyApp(
-    todoBloc: TodoBloc(
-      getTodos: GetTodos(repository),
-      addTodo: AddTodo(repository),
-      updateTodo: UpdateTodo(repository),
-      deleteTodo: DeleteTodo(repository),
+  runApp(
+    RepositoryProvider<TodoRepositoryImpl>(
+      create: (_) => repository,
+      child: MyApp(
+        todoBloc: TodoBloc(
+          getTodos: GetTodos(repository),
+          addTodo: AddTodo(repository),
+          updateTodo: UpdateTodo(repository),
+          deleteTodo: DeleteTodo(repository),
+        ),
+      ),
     ),
-  ));
+  );
 }
 
 class MyApp extends StatelessWidget {

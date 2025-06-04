@@ -9,6 +9,7 @@ abstract class TodoSocketDataSource {
   void addTodo(Todo todo);
   void updateTodo(Todo todo);
   void deleteTodo(String id);
+  
 
   Future<List<Todo>> getTodos(); // <-- Added here
    bool get isConnected; // <-- Add this line
@@ -16,6 +17,7 @@ abstract class TodoSocketDataSource {
   Stream<Todo> get onTodoAdded;
   Stream<Todo> get onTodoUpdated;
   Stream<String> get onTodoDeleted;
+  
 }
 
 class TodoSocketDataSourceImpl implements TodoSocketDataSource {
@@ -33,7 +35,7 @@ class TodoSocketDataSourceImpl implements TodoSocketDataSource {
 
   @override
   void connect() {
-    _socket = IO.io('http://127.0.0.0:3000', <String, dynamic>{
+    _socket = IO.io('http://127.0.0.0:3002', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

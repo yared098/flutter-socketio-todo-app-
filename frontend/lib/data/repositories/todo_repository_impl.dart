@@ -1,25 +1,4 @@
 
-// import 'package:arifpay/data/datasources/local_todo_datasource.dart';
-// import 'package:arifpay/data/models/todo_model.dart';
-// import 'package:arifpay/domain/repositories/todo_repository.dart';
-
-// class TodoRepositoryImpl implements TodoRepository {
-//   final LocalTodoDataSource localDataSource;
-
-//   TodoRepositoryImpl(this.localDataSource);
-
-//   @override
-//   Future<void> addTodo(Todo todo) => localDataSource.addTodo(todo);
-
-//   @override
-//   Future<void> deleteTodo(String id) => localDataSource.deleteTodo(id);
-
-//   @override
-//   Future<List<Todo>> getTodos() => localDataSource.getTodos();
-
-//   @override
-//   Future<void> updateTodo(Todo todo) => localDataSource.updateTodo(todo);
-// }
 import 'package:arifpay/data/datasources/local_todo_datasource.dart';
 import 'package:arifpay/data/datasources/todo_socket_datasource.dart';
 import 'package:arifpay/data/models/todo_model.dart';
@@ -35,6 +14,10 @@ class TodoRepositoryImpl implements TodoRepository {
   }) {
     socketDataSource.connect();
   }
+
+  Stream<Todo> get onTodoAdded => socketDataSource.onTodoAdded;
+  Stream<Todo> get onTodoUpdated => socketDataSource.onTodoUpdated;
+  Stream<String> get onTodoDeleted => socketDataSource.onTodoDeleted;
 
   bool get _socketActive => socketDataSource.isConnected;
 
@@ -71,6 +54,14 @@ class TodoRepositoryImpl implements TodoRepository {
       return await socketDataSource.getTodos();
     } else {
       return await localDataSource.getTodos();
+    }
+  }
+  @override
+  Future<int> getCount() async {
+    if (_socketActive) {
+      return await socketDataSource.getTodos().then((todos) => todos.length);
+    } else {
+      return await localDataSource.getTodos().then((todos) => todos.length);
     }
   }
 
